@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flask-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: aaf7683916f7a4f098c43716cff3cacc-319000060.us-east-1.elb.amazonaws.com # Change this to your domain or use EXTERNAL-IP
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flask-service # Ensure this matches your Flask service name
+                port:
+                  number: 5000
