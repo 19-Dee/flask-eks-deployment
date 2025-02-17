@@ -60,12 +60,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Trivy
+      - name: Install Trivy (Direct Binary)
         run: |
           sudo apt-get update && sudo apt-get install -y curl
-          curl -sSfL https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo tee /etc/apt/trusted.gpg.d/trivy.asc
-          echo "deb https://aquasecurity.github.io/trivy-repo/deb stable main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update && sudo apt-get install -y trivy
+          curl -LO https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
+          tar -xvzf trivy_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/
+          trivy --version # Check installation
 
       - name: Scan Docker Image with Trivy
         run: |
