@@ -101,7 +101,10 @@ jobs:
           aws-region: us-east-1
 
       - name: Update Kubeconfig
-        run: aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+        run: |
+          aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+          kubectl config use-context arn:aws:eks:us-east-1:971422694781:cluster/flask-eks-cluster
+          kubectl config current-context  # Debugging output
 
   deploy:
     name: Deploy to Kubernetes
