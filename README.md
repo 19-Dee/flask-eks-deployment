@@ -10,33 +10,24 @@ _A fully automated, secure deployment pipeline integrating AWS, Kubernetes, Terr
 ├── .github/
 │   ├── workflows/
 │   │   ├── deploy.yml
-│
-├── app/
-│   ├── main.py
-│   ├── requirements.txt
-│   ├── Dockerfile
-│
-├── helm/
-│   ├── flask-app/
-│   │   ├── Chart.yaml
-│   │   ├── values.yaml
-│   │   ├── templates/
-│
-├── k8s-manifests/
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   ├── ingress.yaml
-│
+├── k8-manifests/
+│   ├── flask-deployment.yaml
+│   ├── flask-ingress.yaml
+│   ├── flask-service.yaml
 ├── terraform/
-│   ├── main.tf
-│   ├── variables.tf
+│   ├── ec2.tf
+│   ├── eks-cluster.tf
+│   ├── network.tf
 │   ├── outputs.tf
-│
-├── monitoring/
-│   ├── prometheus-values.yaml
-│   ├── grafana-values.yaml
-│
+│   ├── security.tf
+│   ├── variables.tf
+├── flask-web-app/
+│   ├── app.py
+│   ├── requirements.txt
+├── .gitignore
+├── Dockerfile
 ├── README.md
+
 ```
 
 ---
@@ -240,9 +231,19 @@ jobs:
 ## Screenshots
 
 ### **GitHub Actions CI/CD Pipeline**
+##### Demonstrates automated build, security scanning, and deployment
 ![Screenshot 2025-02-17 at 03 19 26](https://github.com/user-attachments/assets/3d87666f-4f45-42a2-91ea-92d57a2e6408)
 
+### **Application Deployment & Ingress**
+##### Shows that the application is running on Kubernetes and accessible via Ingress
+![Screenshot 2025-02-16 at 22 38 03](https://github.com/user-attachments/assets/d3376450-cd30-43fe-9ec7-ca784ab2a7d7)
+
+### **Helm Deployments & Installed Charts**
+##### Confirms that Helm was used to install Prometheus stack and NGINX Ingress
+![Screenshot 2025-02-17 at 02 22 48](https://github.com/user-attachments/assets/fa5c95d7-5487-443e-a672-b6172064b975)
+
 ### **Grafana Dashboard (Application Metrics)**
+##### Shows the process of accessing the Grafana dashboard and fetching credentials
 ![Screenshot 2025-02-17 at 00 57 55](https://github.com/user-attachments/assets/a502f395-40ab-4ea1-9bc6-a0f62ed29ef6)
 
 ---
