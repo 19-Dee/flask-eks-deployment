@@ -29,7 +29,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           /opt/sonar-scanner/bin/sonar-scanner \
-            -Dsonar.projectKey=19-dee \
+            -Dsonar.projectKey=19-Dee_flask-eks-deployment \
             -Dsonar.organization=19-dee \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.branch.name=main \
