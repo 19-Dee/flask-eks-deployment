@@ -1,0 +1,38 @@
+name: Deploy Flask to EKS
+
+on:
+  push:
+    branches:
+      - main # Runs when you push to main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64 -t cloudsecdee/flask-api:latest --push .
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update Kubeconfig
+        run: aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8-manifests/flask-deployment.yaml
+          kubectl apply -f k8-manifests/flask-service.yaml
+          kubectl apply -f k8-manifests/flask-ingress.yaml
