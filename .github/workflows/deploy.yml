@@ -31,6 +31,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Install SonarScanner
+        run: |
+          sudo apt-get update && sudo apt-get install -y unzip
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+          sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+          echo "export PATH=$PATH:/opt/sonar-scanner/bin" >> ~/.bashrc
+          source ~/.bashrc
+
       - name: Run SonarQube Scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -50,13 +59,16 @@ jobs:
       - name: Install Trivy
         run: |
           sudo apt-get update && sudo apt-get install -y wget
-          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.47.0_Linux-64bit.tar.gz
-          tar zxvf trivy_0.47.0_Linux-64bit.tar.gz
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_Linux-64bit.tar.gz
+          tar zxvf trivy_Linux-64bit.tar.gz
           sudo mv trivy /usr/local/bin/
 
-      - name: Scan Docker Image with Trivy
+      - name: Scan Docker Image with Trivy (Info)
         run: |
           trivy image cloudsecdee/flask-api:latest --exit-code 0 --severity HIGH,CRITICAL
+
+      - name: Scan Docker Image with Trivy (Fail on Critical)
+        run: |
           trivy image cloudsecdee/flask-api:latest --exit-code 1 --severity CRITICAL
 
   configure-aws:
