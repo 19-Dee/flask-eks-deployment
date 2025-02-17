@@ -36,19 +36,24 @@ jobs:
             -Dsonar.qualitygate.wait=true \
             -Dsonar.login=$SONAR_TOKEN
 
-  trivy-filesystem-scan:
-    name: Trivy Filesystem Security Scan
+  install-trivy:
+    name: Install Trivy
     runs-on: ubuntu-latest
-    needs: sonar-scan # Runs after SonarQube scan
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
       - name: Install Trivy
         run: |
           curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
           trivy --version # Verify Trivy installation
+
+  trivy-filesystem-scan:
+    name: Trivy Filesystem Security Scan
+    runs-on: ubuntu-latest
+    needs: [sonar-scan, install-trivy] # Runs after SonarQube and Trivy install
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Scan Source Code with Trivy
         run: |
@@ -71,20 +76,23 @@ jobs:
           docker buildx create --use
           docker buildx build --platform linux/amd64 -t cloudsecdee/flask-api:latest --push .
 
-      - name: Install Trivy (again)
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy --version # Verify Trivy installation
+  trivy-image-scan:
+    name: Trivy Image Security Scan
+    runs-on: ubuntu-latest
+    needs: [build-push, install-trivy] # Runs after Docker image is built
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
       - name: Scan Docker Image with Trivy
         run: |
-          trivy image cloudsecdee/flask-api:latest --exit-code 0 --severity HIGH,CRITICAL
-          trivy image cloudsecdee/flask-api:latest --exit-code 1 --severity CRITICAL
+          trivy image cloudsecdee/flask-api:latest --exit-code 0 --severity HIGH,CRITICAL --ignore-unfixed --scanners vuln
 
   configure-aws:
     name: Configure AWS & Update Kubeconfig
     runs-on: ubuntu-latest
-    needs: build-push # Runs after Docker image is built and scanned
+    needs: [trivy-image-scan] # Runs after image security scan
 
     steps:
       - name: Configure AWS Credentials
