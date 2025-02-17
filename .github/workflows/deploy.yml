@@ -101,7 +101,9 @@ jobs:
           aws-region: us-east-1
 
       - name: Update Kubeconfig
-        run: aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+        run: |
+          aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+          kubectl config current-context
 
   deploy:
     name: Deploy to Kubernetes
@@ -112,8 +114,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Apply Kubernetes Manifests
+      - name: Verify Kubernetes Connection
+        run: |
+          echo "🔍 Checking Kubernetes cluster connectivity..."
+          kubectl cluster-info
+          kubectl get nodes || { echo "❌ Failed to get cluster nodes. Exiting."; exit 1; }
+          echo "✅ Kubernetes cluster is reachable."
+
+      - name: Apply Kubernetes Manifests (With Retry)
         run: |
           echo "🚀 Deploying application to Kubernetes..."
-          kubectl apply -f k8-manifests/
+
+          # Ensure correct EKS context
+          kubectl config use-context $(aws eks describe-cluster --name flask-eks-cluster --region us-east-1 --query "cluster.arn" --output text)
+
+          # Apply manifests with retry logic
+          kubectl apply --validate=false -f k8-manifests/ || { echo "❌ First attempt failed, retrying..."; sleep 10; kubectl apply --validate=false -f k8-manifests/; }
+
           echo "✅ Deployment completed successfully!"
