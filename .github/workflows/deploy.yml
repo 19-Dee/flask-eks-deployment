@@ -25,7 +25,7 @@ jobs:
   sonar-scan:
     name: SonarQube Static Analysis
     runs-on: ubuntu-latest
-    needs: build-push # Runs after Docker image is built
+    needs: build-push
 
     steps:
       - name: Checkout Repository
@@ -49,20 +49,21 @@ jobs:
             -Dsonar.projectKey=cloudsecdee-flask-eks \
             -Dsonar.organization=your-org \
             -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.branch.name=main \
             -Dsonar.login=$SONAR_TOKEN
 
   trivy-scan:
     name: Trivy Security Scan
     runs-on: ubuntu-latest
-    needs: build-push # Runs after Docker image is built
+    needs: build-push
 
     steps:
       - name: Install Trivy
         run: |
           sudo apt-get update
           sudo apt-get install -y curl
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-          sudo mv trivy /usr/local/bin/
+          curl -sfL https://aquasecurity.github.io/trivy/scripts/install.sh | sh
+          sudo mv ./bin/trivy /usr/local/bin/trivy
 
       - name: Scan Docker Image with Trivy (Info)
         run: |
@@ -75,7 +76,7 @@ jobs:
   configure-aws:
     name: Configure AWS & Update Kubeconfig
     runs-on: ubuntu-latest
-    needs: [build-push, sonar-scan, trivy-scan] # Runs after security scans
+    needs: [build-push, sonar-scan, trivy-scan]
 
     steps:
       - name: Configure AWS Credentials
@@ -91,7 +92,7 @@ jobs:
   deploy:
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
-    needs: configure-aws # Runs after AWS is configured
+    needs: configure-aws
 
     steps:
       - name: Checkout Repository
