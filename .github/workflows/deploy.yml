@@ -102,9 +102,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Update Kubeconfig
-        run: aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
-        kubectl cluster-info # Verify connection
+          - name: Update Kubeconfig
+            run: |
+              aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+              kubectl cluster-info # Verify connection
 
       - name: Verify Kubernetes Nodes
         run: |
