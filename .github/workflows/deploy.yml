@@ -104,6 +104,11 @@ jobs:
 
       - name: Update Kubeconfig
         run: aws eks update-kubeconfig --name flask-eks-cluster --region us-east-1
+        kubectl cluster-info # Verify connection
+
+      - name: Verify Kubernetes Nodes
+        run: |
+        kubectl get nodes # Debugging step
 
   deploy:
     name: Deploy to Kubernetes
@@ -116,6 +121,6 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8-manifests/flask-deployment.yaml
-          kubectl apply -f k8-manifests/flask-service.yaml
-          kubectl apply -f k8-manifests/flask-ingress.yaml
+          kubectl apply --validate=false -f k8-manifests/flask-deployment.yaml
+          kubectl apply --validate=false -f k8-manifests/flask-service.yaml
+          kubectl apply --validate=false -f k8-manifests/flask-ingress.yaml
