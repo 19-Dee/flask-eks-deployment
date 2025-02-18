@@ -234,6 +234,14 @@ jobs:
 ##### Demonstrates automated build, security scanning, and deployment
 ![Screenshot 2025-02-17 at 03 19 26](https://github.com/user-attachments/assets/3d87666f-4f45-42a2-91ea-92d57a2e6408)
 
+### **VPC & Subnets Configuration**
+##### Showing the creation of the VPC, public & private subnets, and route tables.
+![Screenshot 2025-02-18 at 11 01 17](https://github.com/user-attachments/assets/008d585b-85ef-4651-aca0-51cbf40fc5b6)
+
+### **EKS Cluster, Node Groups & Security Policies**
+##### This snippet covers the deployment of the EKS cluster, worker nodes, IAM roles, security groups, and networking policies in one view.
+![Screenshot 2025-02-17 at 21 59 19](https://github.com/user-attachments/assets/47b52e45-4d50-4504-9909-ed8063f17005)
+
 ### **Application Deployment & Ingress**
 ##### Shows that the application is running on Kubernetes and accessible via Ingress
 ![Screenshot 2025-02-16 at 22 38 03](https://github.com/user-attachments/assets/d3376450-cd30-43fe-9ec7-ca784ab2a7d7)
