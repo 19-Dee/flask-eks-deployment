@@ -238,6 +238,16 @@ jobs:
 ##### Shows that the application is running on Kubernetes and accessible via Ingress
 ![Screenshot 2025-02-16 at 22 38 03](https://github.com/user-attachments/assets/d3376450-cd30-43fe-9ec7-ca784ab2a7d7)
 
+### **SonarQube Code Quality & Security Issues**
+##### SonarQube detected security, reliability, and maintainability issues
+##### Security Issues:
+ - ##### Service account RBAC should be explicitly set or automounting should be disabled
+##### Reliability & Maintainability Issues:
+ - ##### CPU & memory requests/limits should be specified for containers
+ - ##### Using a specific tag version for Docker images improves reproducibility
+ - ##### Naming conventions for Terraform tags can be improved
+![Screenshot 2025-02-17 at 22 49 38](https://github.com/user-attachments/assets/1b6e1dec-6c0f-42d1-ba50-09e5addf0643)
+
 ### **Helm Deployments & Installed Charts**
 ##### Confirms that Helm was used to install Prometheus stack and NGINX Ingress
 ![Screenshot 2025-02-17 at 02 22 48](https://github.com/user-attachments/assets/fa5c95d7-5487-443e-a672-b6172064b975)
@@ -246,19 +256,25 @@ jobs:
 ##### Shows the process of accessing the Grafana dashboard and fetching credentials
 ![Screenshot 2025-02-17 at 00 57 55](https://github.com/user-attachments/assets/a502f395-40ab-4ea1-9bc6-a0f62ed29ef6)
 
+### **Grafana Authentication & Service Discovery**
+##### Shows the process of accessing the Grafana dashboard and fetching credentials
+![Screenshot 2025-02-16 at 23 13 42](https://github.com/user-attachments/assets/bfd3945a-58cb-4ee0-8e1a-b6dd6a6cb90c)
+
 ---
 
-## How to Run This Project Locally
-### Prerequisites
-Ensure you have the following installed:
-- **AWS CLI** (`aws configure`)
-- **Terraform** (`terraform --version`)
-- **kubectl** (`kubectl version --client`)
-- **Helm** (`helm version`)
-- **Docker** (`docker --version`)
+### Challenges & Lessons Learned
 
-### Steps
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/flask-eks-deployment.git
-   cd flask-eks-deployment
+- ##### EKS Connectivity Issues: Debugged kubectl errors by ensuring aws eks update-kubeconfig was properly configured.
+- ##### Trivy Scanning Debugging: Encountered and resolved false positives in Trivy scans by using --ignore-unfixed and --scanners vuln.
+- ##### Ingress Setup Issues: Had to troubleshoot NGINX Ingress not forwarding traffic properly due to missing annotations.
+- ##### CI/CD Pipeline Failures: Debugged GitHub Actions failures related to authentication and missing secrets.
+
+---
+### Future Improvements
+
+- ##### Helm Chart Integration: Currently, Kubernetes manifests are manually defined. Using Helm would enhance reusability and maintainability.
+- ##### Terraform Backend for State Management: Currently using local state; should integrate Terraform S3 + DynamoDB for remote state locking.
+- ##### Horizontal Pod Autoscaling (HPA): Adding Kubernetes HPA would allow dynamic scaling based on CPU/memory usage.
+- ##### RBAC Security Enhancements: Implement least privilege IAM roles for EKS and enforce stricter security policies.
+
+---
