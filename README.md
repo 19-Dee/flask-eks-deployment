@@ -242,6 +242,10 @@ jobs:
 ##### This snippet covers the deployment of the EKS cluster, worker nodes, IAM roles, security groups, and networking policies in one view.
 ![Screenshot 2025-02-17 at 21 59 19](https://github.com/user-attachments/assets/47b52e45-4d50-4504-9909-ed8063f17005)
 
+### **Dockerfile – Containerizing the Flask App**
+##### Snippet showcasing the Dockerfile used to containerize the Flask application for deployment on AWS EKS.
+![Screenshot 2025-02-17 at 21 43 09](https://github.com/user-attachments/assets/f7ab696b-82c8-4ac7-86ca-4f760d9a4ce5)
+
 ### **Application Deployment & Ingress**
 ##### Shows that the application is running on Kubernetes and accessible via Ingress
 ![Screenshot 2025-02-16 at 22 38 03](https://github.com/user-attachments/assets/d3376450-cd30-43fe-9ec7-ca784ab2a7d7)
