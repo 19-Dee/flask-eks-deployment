@@ -272,6 +272,9 @@ jobs:
 ##### Shows the process of accessing the Grafana dashboard and fetching credentials
 ![Screenshot 2025-02-16 at 23 13 42](https://github.com/user-attachments/assets/bfd3945a-58cb-4ee0-8e1a-b6dd6a6cb90c)
 
+### **Simple Hello World Flask App Running Successfully!**
+![Screenshot 2025-02-17 at 02 20 54](https://github.com/user-attachments/assets/ae32603b-8123-4238-8d30-84f42e7e39ec)
+
 ---
 
 ### Challenges & Lessons Learned
